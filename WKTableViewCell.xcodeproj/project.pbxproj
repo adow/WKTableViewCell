@@ -21,6 +21,7 @@
 		68D147DF1827E8FA00A218D1 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 68D147C11827E8FA00A218D1 /* UIKit.framework */; };
 		68D147E71827E8FA00A218D1 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 68D147E51827E8FA00A218D1 /* InfoPlist.strings */; };
 		68D147E91827E8FA00A218D1 /* WKTableViewCellTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 68D147E81827E8FA00A218D1 /* WKTableViewCellTests.m */; };
+		68D147F41827E91800A218D1 /* WKTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 68D147F31827E91800A218D1 /* WKTableViewCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +54,8 @@
 		68D147E41827E8FA00A218D1 /* WKTableViewCellTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "WKTableViewCellTests-Info.plist"; sourceTree = "<group>"; };
 		68D147E61827E8FA00A218D1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		68D147E81827E8FA00A218D1 /* WKTableViewCellTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WKTableViewCellTests.m; sourceTree = "<group>"; };
+		68D147F21827E91800A218D1 /* WKTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WKTableViewCell.h; sourceTree = "<group>"; };
+		68D147F31827E91800A218D1 /* WKTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WKTableViewCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -119,6 +122,8 @@
 				68D147D31827E8FA00A218D1 /* ViewController.m */,
 				68D147D51827E8FA00A218D1 /* Images.xcassets */,
 				68D147C41827E8FA00A218D1 /* Supporting Files */,
+				68D147F21827E91800A218D1 /* WKTableViewCell.h */,
+				68D147F31827E91800A218D1 /* WKTableViewCell.m */,
 			);
 			path = WKTableViewCell;
 			sourceTree = "<group>";
@@ -250,6 +255,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				68D147D41827E8FA00A218D1 /* ViewController.m in Sources */,
+				68D147F41827E91800A218D1 /* WKTableViewCell.m in Sources */,
 				68D147CE1827E8FA00A218D1 /* AppDelegate.m in Sources */,
 				68D147CA1827E8FA00A218D1 /* main.m in Sources */,
 			);
@@ -378,6 +384,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ENABLE_OBJC_ARC = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "WKTableViewCell/WKTableViewCell-Prefix.pch";
 				INFOPLIST_FILE = "WKTableViewCell/WKTableViewCell-Info.plist";
@@ -391,6 +398,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ENABLE_OBJC_ARC = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "WKTableViewCell/WKTableViewCell-Prefix.pch";
 				INFOPLIST_FILE = "WKTableViewCell/WKTableViewCell-Info.plist";
