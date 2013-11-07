@@ -21,7 +21,7 @@
     if (self) {
         // Initialization code
 
-        self.backgroundColor=[UIColor lightGrayColor];
+        //self.backgroundColor=[UIColor lightGrayColor];
         _scrollView=[[UIScrollView alloc]initWithFrame:self.bounds];
         _scrollView.contentSize=CGSizeMake(self.bounds.size.width+WKTableViewCellButtonWidth*2, self.bounds.size.height);
         _scrollView.showsHorizontalScrollIndicator=NO;
@@ -30,7 +30,7 @@
         _scrollView.backgroundColor=[UIColor clearColor];
         [self.contentView addSubview:_scrollView];
         
-        _buttonsView=[[UIView alloc]initWithFrame:CGRectMake(self.bounds.size.width-WKTableViewCellButtonWidth*2, 0, WKTableViewCellButtonWidth*2, self.bounds.size.height)];
+        _buttonsView=[[UIView alloc]initWithFrame:CGRectMake(self.bounds.size.width-WKTableViewCellButtonWidth*2+1, 0, WKTableViewCellButtonWidth*2, self.bounds.size.height)];
         [self.scrollView addSubview:_buttonsView];
         
         CGFloat buttonWidth=WKTableViewCellButtonWidth;
@@ -41,7 +41,7 @@
         [_button_1 addTarget:self action:@selector(onButton:) forControlEvents:UIControlEventTouchUpInside];
         [_buttonsView addSubview:_button_1];
         
-        _button_2=[[UIButton alloc]initWithFrame:CGRectMake(buttonWidth, 0.0f, buttonWidth, buttonHeight)];
+        _button_2=[[UIButton alloc]initWithFrame:CGRectMake(buttonWidth+1, 0.0f, buttonWidth, buttonHeight)];
         _button_2.backgroundColor=[UIColor redColor];
         [_button_2 setTitle:@"More" forState:UIControlStateNormal];
         [_button_2 addTarget:self action:@selector(onButton:) forControlEvents:UIControlEventTouchUpInside];
