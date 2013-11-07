@@ -24,6 +24,7 @@
         //self.backgroundColor=[UIColor lightGrayColor];
         _scrollView=[[UIScrollView alloc]initWithFrame:self.bounds];
         _scrollView.contentSize=CGSizeMake(self.bounds.size.width+WKTableViewCellButtonWidth*2, self.bounds.size.height);
+        _scrollView.autoresizingMask=UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
         _scrollView.showsHorizontalScrollIndicator=NO;
         _scrollView.showsVerticalScrollIndicator=NO;
         _scrollView.delegate=self;
@@ -31,11 +32,13 @@
         [self.contentView addSubview:_scrollView];
         
         _buttonsView=[[UIView alloc]initWithFrame:CGRectMake(self.bounds.size.width-WKTableViewCellButtonWidth*2+1, 0, WKTableViewCellButtonWidth*2, self.bounds.size.height)];
+        _buttonsView.autoresizingMask=UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
         [self.scrollView addSubview:_buttonsView];
         
         CGFloat buttonWidth=WKTableViewCellButtonWidth;
         CGFloat buttonHeight=self.bounds.size.height;
         _button_1=[[UIButton alloc]initWithFrame:CGRectMake(0.0f, 0.0f, buttonWidth, buttonHeight)];
+        _button_1.autoresizingMask=UIViewAutoresizingFlexibleHeight;
         _button_1.backgroundColor=[UIColor redColor];
         [_button_1 setTitle:@"Delete" forState:UIControlStateNormal];
         [_button_1 addTarget:self action:@selector(onButton:) forControlEvents:UIControlEventTouchUpInside];
@@ -43,6 +46,7 @@
         
         _button_2=[[UIButton alloc]initWithFrame:CGRectMake(buttonWidth+1, 0.0f, buttonWidth, buttonHeight)];
         _button_2.backgroundColor=[UIColor redColor];
+        _button_2.autoresizingMask=UIViewAutoresizingFlexibleHeight;
         [_button_2 setTitle:@"More" forState:UIControlStateNormal];
         [_button_2 addTarget:self action:@selector(onButton:) forControlEvents:UIControlEventTouchUpInside];
         [_buttonsView addSubview:_button_2];

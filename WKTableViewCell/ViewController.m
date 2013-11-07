@@ -41,7 +41,7 @@
 }
 #pragma mark - UITableDataSource and UITableViewDelegate
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return 44.0f;
+    return 60.0f;
 }
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     return 30.0f;
@@ -54,7 +54,7 @@
         cell.tableView=tableView;
         cell.delegate=self;
     }
-    UILabel* titleLabel=[[[UILabel alloc]initWithFrame:CGRectMake(0, 0, 320, 44.0f)] autorelease];
+    UILabel* titleLabel=[[[UILabel alloc]initWithFrame:CGRectMake(0, 0, 320, 66.0f)] autorelease];
     titleLabel.text=[NSString stringWithFormat:@"This is row at indexPath:%d",indexPath.row];
     [cell.cellContentView addSubview:titleLabel];
     return cell;
