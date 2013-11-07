@@ -123,11 +123,18 @@
     }
 }
 -(IBAction)onButton:(id)sender{
+    NSIndexPath* indexPath=[self.tableView indexPathForCell:self];
     if (sender==self.button_1){
         NSLog(@"button_1");
+        if ([self.delegate respondsToSelector:@selector(button_1_touched_on_cell:atIndexPath:)]){
+            [self.delegate button_1_touched_on_cell:self atIndexPath:indexPath];
+        }
     }
     else if (sender==self.button_2){
         NSLog(@"button_2");
+        if ([self.delegate respondsToSelector:@selector(button_2_touched_on_cell:atIndexPath:)]){
+            [self.delegate button_2_touched_on_cell:self atIndexPath:indexPath];
+        }
     }
 }
 #pragma mark - UIScrollViewDelegate

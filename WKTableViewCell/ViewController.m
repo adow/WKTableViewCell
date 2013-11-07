@@ -8,7 +8,7 @@
 
 #import "ViewController.h"
 #import "WKTableViewCell.h"
-@interface ViewController ()<UITableViewDataSource,UITableViewDelegate>
+@interface ViewController ()<UITableViewDataSource,UITableViewDelegate,WKTableViewCellDelegate>
 @property (nonatomic,retain) UITableView* tableView;
 @end
 
@@ -52,6 +52,7 @@
     if (!cell){
         cell=[[[WKTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identity] autorelease];
         cell.tableView=tableView;
+        cell.delegate=self;
     }
     UILabel* titleLabel=[[[UILabel alloc]initWithFrame:CGRectMake(0, 0, 320, 44.0f)] autorelease];
     titleLabel.text=[NSString stringWithFormat:@"This is row at indexPath:%d",indexPath.row];
@@ -60,5 +61,12 @@
 }
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     NSLog(@"indexPath:%d",indexPath.row);
+}
+#pragma mark - WKTableViewCellDelegate
+-(void)button_1_touched_on_cell:(WKTableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath{
+    NSLog(@"button_1 touched at %d",indexPath.row);
+}
+-(void)button_2_touched_on_cell:(WKTableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath{
+    NSLog(@"button_2 touched at %d",indexPath.row);
 }
 @end

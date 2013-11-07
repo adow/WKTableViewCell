@@ -11,6 +11,13 @@ typedef enum WKTableViewCellState:NSUInteger{
     WKTableViewCellStateUnexpanded=0,
     WKTableViewCellStateExpended=1,
 } WKTableViewCellState;
+@class WKTableViewCell;
+@protocol WKTableViewCellDelegate <NSObject>
+-(void)button_1_touched_on_cell:(WKTableViewCell*)cell atIndexPath:(NSIndexPath*)indexPath;
+-(void)button_2_touched_on_cell:(WKTableViewCell*)cell atIndexPath:(NSIndexPath*)indexPath;
+
+
+@end
 @interface WKTableViewCell : UITableViewCell{
     UIButton* _button_1;
     UIButton* _button_2;
@@ -23,5 +30,5 @@ typedef enum WKTableViewCellState:NSUInteger{
 @property (nonatomic,retain) UIView* buttonsView;
 @property (nonatomic,retain) UIScrollView* scrollView;
 @property (nonatomic,retain) UIView* cellContentView;
-
+@property (nonatomic,assign) id<WKTableViewCellDelegate> delegate;
 @end
