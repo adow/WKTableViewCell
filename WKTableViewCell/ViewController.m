@@ -53,6 +53,9 @@
         cell=[[[WKTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identity] autorelease];
         cell.tableView=tableView;
     }
+    UILabel* titleLabel=[[[UILabel alloc]initWithFrame:CGRectMake(0, 0, 320, 44.0f)] autorelease];
+    titleLabel.text=[NSString stringWithFormat:@"indexPath:%d",indexPath.row];
+    [cell.cellContentView addSubview:titleLabel];
     return cell;
 }
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{

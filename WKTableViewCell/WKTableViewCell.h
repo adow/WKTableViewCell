@@ -20,4 +20,8 @@ typedef enum WKTableViewCellState:NSUInteger{
 @property (nonatomic,retain) UIButton* button_2;
 @property (nonatomic,assign) WKTableViewCellState state;///当前的状态
 @property (nonatomic,assign) UITableView* tableView;
+@property (nonatomic,retain) UIView* buttonsView;
+@property (nonatomic,retain) UIScrollView* scrollView;
+@property (nonatomic,retain) UIView* cellContentView;
+
 @end

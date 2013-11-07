@@ -10,9 +10,6 @@
 @interface WKTableViewCell()<UIScrollViewDelegate>{
     
 }
-@property (nonatomic,retain) UIView* controlView;
-@property (nonatomic,retain) UIScrollView* scrollView;
-@property (nonatomic,retain) UIView* cellContentView;
 @end
 
 @implementation WKTableViewCell
@@ -23,63 +20,40 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         // Initialization code
-        //self.translatesAutoresizingMaskIntoConstraints=NO;
-        self.contentView.translatesAutoresizingMaskIntoConstraints=NO;
-        _controlView=[[UIView alloc]initWithFrame:self.bounds];
-        _controlView.backgroundColor=[UIColor colorWithRed:0/255.0f green:0/255.0f blue:0/255.0f alpha:0.05f];
-        //_controlView.translatesAutoresizingMaskIntoConstraints=NO;
-        [self.contentView addSubview:_controlView];
-        NSArray* controlViewConstraintsH=
-            [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0.0-[_controlView]-0.0-|"
-                                                    options:0
-                                                    metrics:nil
-                                                      views:NSDictionaryOfVariableBindings(_controlView)];
-        [self.contentView addConstraints:controlViewConstraintsH];
-        NSArray* controlViewConstraintsV=
-            [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0.0-[_controlView]-0.0-|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(_controlView)];
-        [self.contentView addConstraints:controlViewConstraintsV];
-        
-        CGFloat buttonWidth=WKTableViewCellButtonWidth;
-        CGFloat buttonHeight=self.bounds.size.height;
-        _button_1=[[UIButton alloc]initWithFrame:CGRectMake(self.bounds.size.width-buttonWidth, 0.0f, buttonWidth, buttonHeight)];
-        _button_1.translatesAutoresizingMaskIntoConstraints=NO;
-        _button_1.backgroundColor=[UIColor redColor];
-        [_button_1 setTitle:@"Delete" forState:UIControlStateNormal];
-        [_controlView addSubview:_button_1];
-        
-        _button_2=[[UIButton alloc]initWithFrame:CGRectMake(self.bounds.size.width-buttonWidth*2-1, 0.0f, buttonWidth, buttonHeight)];
-        _button_2.translatesAutoresizingMaskIntoConstraints=NO;
-        _button_2.backgroundColor=[UIColor redColor];
-        [_button_2 setTitle:@"More" forState:UIControlStateNormal];
-        [_controlView addSubview:_button_2];
-        
-        NSArray* buttonConstraintsH=[NSLayoutConstraint constraintsWithVisualFormat:@"H:[_button_2(_button_1)]-1-[_button_1(60)]-0.0-|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(_button_1,_button_2)];
-        [self.controlView addConstraints:buttonConstraintsH];
-        NSArray* buttonConstraintsV_1=[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0.0-[_button_1]-0.0-|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(_button_1)];
-        [self.controlView addConstraints:buttonConstraintsV_1];
-        NSArray* buttonConstraintsV_2=[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0.0-[_button_2]-0.0-|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(_button_2)];
-        [self.controlView addConstraints:buttonConstraintsV_2];
 
+        self.backgroundColor=[UIColor lightGrayColor];
         _scrollView=[[UIScrollView alloc]initWithFrame:self.bounds];
         _scrollView.contentSize=CGSizeMake(self.bounds.size.width+WKTableViewCellButtonWidth*2, self.bounds.size.height);
         _scrollView.showsHorizontalScrollIndicator=NO;
         _scrollView.showsVerticalScrollIndicator=NO;
-        _scrollView.translatesAutoresizingMaskIntoConstraints=NO;
         _scrollView.delegate=self;
-        //_scrollView.userInteractionEnabled=NO;
+        _scrollView.backgroundColor=[UIColor clearColor];
         [self.contentView addSubview:_scrollView];
-        NSArray* scrollViewConstraintsH=[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0.0-[_scrollView]-0.0-|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(_scrollView)];
-        [self.contentView addConstraints:scrollViewConstraintsH];
-        NSArray* scrollViewConstraintsV=[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0.0-[_scrollView]-0.0-|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(_scrollView)];
-        [self.contentView addConstraints:scrollViewConstraintsV];
         
-
+        _buttonsView=[[UIView alloc]initWithFrame:CGRectMake(self.bounds.size.width-WKTableViewCellButtonWidth*2, 0, WKTableViewCellButtonWidth*2, self.bounds.size.height)];
+        [self.scrollView addSubview:_buttonsView];
+        
+        CGFloat buttonWidth=WKTableViewCellButtonWidth;
+        CGFloat buttonHeight=self.bounds.size.height;
+        _button_1=[[UIButton alloc]initWithFrame:CGRectMake(0.0f, 0.0f, buttonWidth, buttonHeight)];
+        _button_1.backgroundColor=[UIColor redColor];
+        [_button_1 setTitle:@"Delete" forState:UIControlStateNormal];
+        [_button_1 addTarget:self action:@selector(onButton:) forControlEvents:UIControlEventTouchUpInside];
+        [_buttonsView addSubview:_button_1];
+        
+        _button_2=[[UIButton alloc]initWithFrame:CGRectMake(buttonWidth, 0.0f, buttonWidth, buttonHeight)];
+        _button_2.backgroundColor=[UIColor redColor];
+        [_button_2 setTitle:@"More" forState:UIControlStateNormal];
+        [_button_2 addTarget:self action:@selector(onButton:) forControlEvents:UIControlEventTouchUpInside];
+        [_buttonsView addSubview:_button_2];
+        
         _cellContentView=[[UIView alloc]initWithFrame:self.bounds];
+        _cellContentView.autoresizingMask=UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
         _cellContentView.backgroundColor=[UIColor whiteColor];
         [_scrollView addSubview:_cellContentView];
         
         UITapGestureRecognizer* tapGesture=[[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(onTapGesture:)] autorelease];
-        [self addGestureRecognizer:tapGesture];
+        [self.cellContentView addGestureRecognizer:tapGesture];
     }
     return self;
 }
@@ -93,7 +67,7 @@
 -(void)dealloc{
     [_button_1 release];
     [_button_2 release];
-    [_controlView release];
+    [_buttonsView release];
     [_cellContentView release];
     [_scrollView release];
     [super dealloc];
@@ -102,6 +76,9 @@
     [super prepareForReuse];
     [self.scrollView setContentOffset:CGPointZero];
     self.state=WKTableViewCellStateUnexpanded;
+    for (UIView* subView in self.cellContentView.subviews) {
+        [subView removeFromSuperview];
+    }
 }
 #pragma mark - Properties
 -(void)setButton_1:(UIButton *)button_1{
@@ -145,9 +122,18 @@
         
     }
 }
+-(IBAction)onButton:(id)sender{
+    if (sender==self.button_1){
+        NSLog(@"button_1");
+    }
+    else if (sender==self.button_2){
+        NSLog(@"button_2");
+    }
+}
 #pragma mark - UIScrollViewDelegate
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView{
     //NSLog(@"%@",NSStringFromCGPoint(scrollView.contentOffset));
+    self.buttonsView.transform=CGAffineTransformMakeTranslation(scrollView.contentOffset.x, 0.0f);
 }
 -(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
     if (scrollView.contentOffset.x>=WKTableViewCellButtonWidth){
