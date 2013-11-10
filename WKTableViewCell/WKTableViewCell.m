@@ -14,7 +14,6 @@
 
 @implementation WKTableViewCell
 #define  WKTableViewCellButtonWidth 60.0f
-static WKTableViewCell *_edingCell;///正在编辑中的cell
 @dynamic state;
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -22,9 +21,17 @@ static WKTableViewCell *_edingCell;///正在编辑中的cell
     if (self) {
         // Initialization code
 
+    }
+    return self;
+}
+-(id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier withLeftButtonTitles:(NSArray *)leftButtonTitles{
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+    if (self) {
+        // Initialization code
+        
         //self.backgroundColor=[UIColor lightGrayColor];
         _scrollView=[[UIScrollView alloc]initWithFrame:self.bounds];
-        _scrollView.contentSize=CGSizeMake(self.bounds.size.width+WKTableViewCellButtonWidth*2, self.bounds.size.height);
+        _scrollView.contentSize=CGSizeMake(self.bounds.size.width+WKTableViewCellButtonWidth*(leftButtonTitles.count), self.bounds.size.height);
         _scrollView.autoresizingMask=UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
         _scrollView.showsHorizontalScrollIndicator=NO;
         _scrollView.showsVerticalScrollIndicator=NO;
@@ -32,25 +39,25 @@ static WKTableViewCell *_edingCell;///正在编辑中的cell
         _scrollView.backgroundColor=[UIColor clearColor];
         [self.contentView addSubview:_scrollView];
         
-        _buttonsView=[[UIView alloc]initWithFrame:CGRectMake(self.bounds.size.width-WKTableViewCellButtonWidth*2+1, 0, WKTableViewCellButtonWidth*2, self.bounds.size.height)];
+        self.leftButtonTitles=leftButtonTitles;
+        CGFloat leftButtonViewWidth=WKTableViewCellButtonWidth*self.leftButtonTitles.count+1*(self.leftButtonTitles.count-1);
+        _buttonsView=[[UIView alloc]initWithFrame:CGRectMake(self.bounds.size.width-leftButtonViewWidth, 0,
+                                                             leftButtonViewWidth, self.bounds.size.height)];
         _buttonsView.autoresizingMask=UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
         [self.scrollView addSubview:_buttonsView];
         
         CGFloat buttonWidth=WKTableViewCellButtonWidth;
         CGFloat buttonHeight=self.bounds.size.height;
-        _button_1=[[UIButton alloc]initWithFrame:CGRectMake(0.0f, 0.0f, buttonWidth, buttonHeight)];
-        _button_1.autoresizingMask=UIViewAutoresizingFlexibleHeight;
-        _button_1.backgroundColor=[UIColor redColor];
-        [_button_1 setTitle:@"Delete" forState:UIControlStateNormal];
-        [_button_1 addTarget:self action:@selector(onButton:) forControlEvents:UIControlEventTouchUpInside];
-        [_buttonsView addSubview:_button_1];
-        
-        _button_2=[[UIButton alloc]initWithFrame:CGRectMake(buttonWidth+1, 0.0f, buttonWidth, buttonHeight)];
-        _button_2.backgroundColor=[UIColor redColor];
-        _button_2.autoresizingMask=UIViewAutoresizingFlexibleHeight;
-        [_button_2 setTitle:@"More" forState:UIControlStateNormal];
-        [_button_2 addTarget:self action:@selector(onButton:) forControlEvents:UIControlEventTouchUpInside];
-        [_buttonsView addSubview:_button_2];
+        for (int a=0; a<self.leftButtonTitles.count; a++) {
+            CGFloat left=a*(WKTableViewCellButtonWidth+1);
+            UIButton* button=[[[UIButton alloc]initWithFrame:CGRectMake(left, 0, buttonWidth,buttonHeight)] autorelease];
+            button.tag=a;
+            button.autoresizingMask=UIViewAutoresizingFlexibleHeight;
+            button.backgroundColor=[UIColor redColor];
+            [button setTitle:self.leftButtonTitles[a] forState:UIControlStateNormal];
+            [button addTarget:self action:@selector(onButton:) forControlEvents:UIControlEventTouchUpInside];
+            [_buttonsView addSubview:button];
+        }
         
         _cellContentView=[[UIView alloc]initWithFrame:self.bounds];
         _cellContentView.autoresizingMask=UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
@@ -62,7 +69,6 @@ static WKTableViewCell *_edingCell;///正在编辑中的cell
     }
     return self;
 }
-
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
 {
     [super setSelected:selected animated:animated];
@@ -70,8 +76,6 @@ static WKTableViewCell *_edingCell;///正在编辑中的cell
     // Configure the view for the selected state
 }
 -(void)dealloc{
-    [_button_1 release];
-    [_button_2 release];
     [_buttonsView release];
     [_cellContentView release];
     [_scrollView release];
@@ -86,29 +90,12 @@ static WKTableViewCell *_edingCell;///正在编辑中的cell
     }
 }
 #pragma mark - Properties
--(void)setButton_1:(UIButton *)button_1{
-    [button_1 retain];
-    [_button_1 release];
-    _button_1=button_1;
-}
--(UIButton*)button_1{
-    return _button_1;
-}
--(void)setButton_2:(UIButton *)button_2{
-    [button_2 retain];
-    [_button_2 release];
-    _button_2=button_2;
-}
--(UIButton*)button_2{
-    return _button_2;
-}
 -(void)setState:(WKTableViewCellState)state{
     _state=state;
     if (state==WKTableViewCellStateExpended){
-        [self.scrollView setContentOffset:CGPointMake(WKTableViewCellButtonWidth*2, 0.0f) animated:YES];
+        [self.scrollView setContentOffset:CGPointMake(self.buttonsView.frame.size.width, 0.0f) animated:YES];
         self.tableView.scrollEnabled=NO;
         self.tableView.allowsSelection=NO;
-        _edingCell=self;
         for (UITableViewCell* view in self.tableView.visibleCells) {
             if ([view isKindOfClass:[WKTableViewCell class]] && view !=self){
                 WKTableViewCell* cell=(WKTableViewCell*)view;
@@ -117,7 +104,6 @@ static WKTableViewCell *_edingCell;///正在编辑中的cell
         }
     }
     else if(state==WKTableViewCellStateUnexpanded){
-        _edingCell=nil;
         self.scrollView.scrollEnabled=YES;
         [self.scrollView setContentOffset:CGPointZero animated:YES];
         self.tableView.scrollEnabled=YES;
@@ -130,17 +116,9 @@ static WKTableViewCell *_edingCell;///正在编辑中的cell
 #pragma mark - Action
 -(IBAction)onButton:(id)sender{
     NSIndexPath* indexPath=[self.tableView indexPathForCell:self];
-    if (sender==self.button_1){
-        NSLog(@"button_1");
-        if ([self.delegate respondsToSelector:@selector(button_1_touched_on_cell:atIndexPath:)]){
-            [self.delegate button_1_touched_on_cell:self atIndexPath:indexPath];
-        }
-    }
-    else if (sender==self.button_2){
-        NSLog(@"button_2");
-        if ([self.delegate respondsToSelector:@selector(button_2_touched_on_cell:atIndexPath:)]){
-            [self.delegate button_2_touched_on_cell:self atIndexPath:indexPath];
-        }
+    UIButton* button=(UIButton*)sender;
+    if ([self.delegate respondsToSelector:@selector(buttonTouchedOnCell:atIndexPath:atButtonIndex:)]){
+        [self.delegate buttonTouchedOnCell:self atIndexPath:indexPath atButtonIndex:button.tag];
     }
 }
 #pragma mark Gesture
@@ -175,7 +153,7 @@ static WKTableViewCell *_edingCell;///正在编辑中的cell
     self.buttonsView.transform=CGAffineTransformMakeTranslation(scrollView.contentOffset.x, 0.0f);
 }
 -(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
-    if (scrollView.contentOffset.x>=WKTableViewCellButtonWidth){
+    if (scrollView.contentOffset.x>=self.buttonsView.frame.size.width/2){
         self.state=WKTableViewCellStateExpended;
     }
     else{

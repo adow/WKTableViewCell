@@ -13,22 +13,17 @@ typedef enum WKTableViewCellState:NSUInteger{
 } WKTableViewCellState;
 @class WKTableViewCell;
 @protocol WKTableViewCellDelegate <NSObject>
--(void)button_1_touched_on_cell:(WKTableViewCell*)cell atIndexPath:(NSIndexPath*)indexPath;
--(void)button_2_touched_on_cell:(WKTableViewCell*)cell atIndexPath:(NSIndexPath*)indexPath;
-
-
+-(void)buttonTouchedOnCell:(WKTableViewCell*)cell atIndexPath:(NSIndexPath*)indexPath atButtonIndex:(NSInteger)buttonIndex;
 @end
 @interface WKTableViewCell : UITableViewCell{
-    UIButton* _button_1;
-    UIButton* _button_2;
     WKTableViewCellState _state;
 }
-@property (nonatomic,retain) UIButton* button_1;
-@property (nonatomic,retain) UIButton* button_2;
 @property (nonatomic,assign) WKTableViewCellState state;///当前的状态
 @property (nonatomic,assign) UITableView* tableView;
 @property (nonatomic,retain) UIView* buttonsView;
 @property (nonatomic,retain) UIScrollView* scrollView;
 @property (nonatomic,retain) UIView* cellContentView;
 @property (nonatomic,assign) id<WKTableViewCellDelegate> delegate;
+@property (nonatomic,copy) NSArray* leftButtonTitles;///按钮的标题
+- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier withLeftButtonTitles:(NSArray*)leftButtonTitles;
 @end

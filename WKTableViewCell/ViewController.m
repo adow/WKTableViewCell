@@ -50,7 +50,8 @@
     static NSString* identity=@"cell-identity";
     WKTableViewCell* cell=(WKTableViewCell*)[tableView dequeueReusableCellWithIdentifier:identity];
     if (!cell){
-        cell=[[[WKTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identity] autorelease];
+        //cell=[[[WKTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identity] autorelease];
+        cell=[[[WKTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identity withLeftButtonTitles:@[@"View",@"More",@"Delete"]] autorelease];
         cell.tableView=tableView;
         cell.delegate=self;
     }
@@ -63,10 +64,7 @@
     NSLog(@"indexPath:%d",indexPath.row);
 }
 #pragma mark - WKTableViewCellDelegate
--(void)button_1_touched_on_cell:(WKTableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath{
-    NSLog(@"button_1 touched at %d",indexPath.row);
-}
--(void)button_2_touched_on_cell:(WKTableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath{
-    NSLog(@"button_2 touched at %d",indexPath.row);
+-(void)buttonTouchedOnCell:(WKTableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath atButtonIndex:(NSInteger)buttonIndex{
+    NSLog(@"row:%d,buttonIndex:%d",indexPath.row,buttonIndex);
 }
 @end
