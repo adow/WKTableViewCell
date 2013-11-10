@@ -66,6 +66,8 @@
         
         UITapGestureRecognizer* tapGesture=[[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(onTapGesture:)] autorelease];
         [self.cellContentView addGestureRecognizer:tapGesture];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notificationChangeToUnexpanded:) name:WKTableViewCellNotificationChangeToUnexpanded object:nil];
     }
     return self;
 }
@@ -76,6 +78,7 @@
     // Configure the view for the selected state
 }
 -(void)dealloc{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [_buttonsView release];
     [_cellContentView release];
     [_scrollView release];
@@ -159,5 +162,9 @@
     else{
         self.state=WKTableViewCellStateUnexpanded;
     }
+}
+#pragma mark - Notififcation
+-(void)notificationChangeToUnexpanded:(NSNotification*)notification{
+    self.state=WKTableViewCellStateUnexpanded;
 }
 @end

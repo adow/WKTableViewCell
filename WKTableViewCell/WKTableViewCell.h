@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#define WKTableViewCellNotificationChangeToUnexpanded @"WKTableViewCellNotificationChangeToUnexpanded"
 typedef enum WKTableViewCellState:NSUInteger{
     WKTableViewCellStateUnexpanded=0,
     WKTableViewCellStateExpended=1,

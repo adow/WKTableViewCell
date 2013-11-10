@@ -8,7 +8,9 @@
 
 #import "ViewController.h"
 #import "WKTableViewCell.h"
-@interface ViewController ()<UITableViewDataSource,UITableViewDelegate,WKTableViewCellDelegate>
+@interface ViewController ()<UITableViewDataSource,UITableViewDelegate,WKTableViewCellDelegate>{
+    NSMutableArray* _rows;
+}
 @property (nonatomic,retain) UITableView* tableView;
 @end
 
@@ -18,6 +20,12 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
+    if (!_rows){
+        _rows=[[NSMutableArray alloc]init];
+    }
+    for (int a=0; a<30; a++) {
+        [_rows addObject:[NSString stringWithFormat:@"Cell in Table at Row :%d",a]];
+    }
     if (!_tableView){
         _tableView=[[UITableView alloc]initWithFrame:self.view.bounds];
         _tableView.dataSource=self;
@@ -36,6 +44,7 @@
     }
 }
 -(void)dealloc{
+    [_rows release];
     [_tableView release];
     [super dealloc];
 }
@@ -44,7 +53,7 @@
     return 60.0f;
 }
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return 30.0f;
+    return _rows.count;
 }
 -(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     static NSString* identity=@"cell-identity";
@@ -55,8 +64,8 @@
         cell.tableView=tableView;
         cell.delegate=self;
     }
-    UILabel* titleLabel=[[[UILabel alloc]initWithFrame:CGRectMake(0, 0, 320, 66.0f)] autorelease];
-    titleLabel.text=[NSString stringWithFormat:@"Row at indexPath:%d",indexPath.row];
+    UILabel* titleLabel=[[[UILabel alloc]initWithFrame:CGRectMake(0, 0, 320, 60.0f)] autorelease];
+    titleLabel.text=_rows[indexPath.row];
     [cell.cellContentView addSubview:titleLabel];
     return cell;
 }
@@ -66,5 +75,12 @@
 #pragma mark - WKTableViewCellDelegate
 -(void)buttonTouchedOnCell:(WKTableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath atButtonIndex:(NSInteger)buttonIndex{
     NSLog(@"row:%d,buttonIndex:%d",indexPath.row,buttonIndex);
+    if (buttonIndex==1){
+        [_rows removeObjectAtIndex:indexPath.row];
+        [self.tableView beginUpdates];
+        [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationLeft];
+        [self.tableView endUpdates];
+        [[NSNotificationCenter defaultCenter] postNotificationName:WKTableViewCellNotificationChangeToUnexpanded object:nil];
+    }
 }
 @end
