@@ -51,17 +51,17 @@
     WKTableViewCell* cell=(WKTableViewCell*)[tableView dequeueReusableCellWithIdentifier:identity];
     if (!cell){
         //cell=[[[WKTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identity] autorelease];
-        cell=[[[WKTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identity withLeftButtonTitles:@[@"View",@"More",@"Delete"]] autorelease];
+        cell=[[[WKTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identity withLeftButtonTitles:@[@"More",@"Delete"]] autorelease];
         cell.tableView=tableView;
         cell.delegate=self;
     }
     UILabel* titleLabel=[[[UILabel alloc]initWithFrame:CGRectMake(0, 0, 320, 66.0f)] autorelease];
-    titleLabel.text=[NSString stringWithFormat:@"This is row at indexPath:%d",indexPath.row];
+    titleLabel.text=[NSString stringWithFormat:@"Row at indexPath:%d",indexPath.row];
     [cell.cellContentView addSubview:titleLabel];
     return cell;
 }
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    NSLog(@"indexPath:%d",indexPath.row);
+    NSLog(@"select row at indexPath:%d",indexPath.row);
 }
 #pragma mark - WKTableViewCellDelegate
 -(void)buttonTouchedOnCell:(WKTableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath atButtonIndex:(NSInteger)buttonIndex{
