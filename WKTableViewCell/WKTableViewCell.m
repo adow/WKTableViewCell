@@ -24,11 +24,11 @@
     }
     return self;
 }
--(id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier withLeftButtonTitles:(NSArray *)leftButtonTitles{
+-(id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier inTableView:(UITableView *)tableView withLeftButtonTitles:(NSArray *)leftButtonTitles{
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         // Initialization code
-        
+        self.tableView=tableView;
         //self.backgroundColor=[UIColor lightGrayColor];
         _scrollView=[[UIScrollView alloc]initWithFrame:self.bounds];
         _scrollView.contentSize=CGSizeMake(self.bounds.size.width+WKTableViewCellButtonWidth*(leftButtonTitles.count), self.bounds.size.height);
@@ -59,7 +59,14 @@
             [_buttonsView addSubview:button];
         }
         
-        _cellContentView=[[UIView alloc]initWithFrame:self.bounds];
+        CGRect cellContentViewFrame=self.bounds;
+        if ([self.tableView respondsToSelector:@selector(separatorInset)]){
+            cellContentViewFrame=CGRectMake(self.tableView.separatorInset.left,
+                                            self.tableView.separatorInset.top,
+                                            self.bounds.size.width-self.tableView.separatorInset.left,
+                                            self.bounds.size.height-self.tableView.separatorInset.top);
+        }
+        _cellContentView=[[UIView alloc]initWithFrame:cellContentViewFrame];
         _cellContentView.autoresizingMask=UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
         _cellContentView.backgroundColor=[UIColor whiteColor];
         [_scrollView addSubview:_cellContentView];

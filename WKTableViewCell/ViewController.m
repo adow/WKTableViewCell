@@ -60,11 +60,14 @@
     WKTableViewCell* cell=(WKTableViewCell*)[tableView dequeueReusableCellWithIdentifier:identity];
     if (!cell){
         //cell=[[[WKTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identity] autorelease];
-        cell=[[[WKTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identity withLeftButtonTitles:@[@"More",@"Delete"]] autorelease];
-        cell.tableView=tableView;
+        cell=[[[WKTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault
+                                    reuseIdentifier:identity
+                                        inTableView:tableView
+                               withLeftButtonTitles:@[@"More",@"Delete"]] autorelease];
         cell.delegate=self;
     }
-    UILabel* titleLabel=[[[UILabel alloc]initWithFrame:CGRectMake(0, 0, 320, 60.0f)] autorelease];
+    UILabel* titleLabel=[[[UILabel alloc]initWithFrame:CGRectMake(0, 0, 320, tableView.rowHeight)] autorelease];
+    titleLabel.autoresizingMask=UIViewAutoresizingFlexibleHeight;
     titleLabel.text=_rows[indexPath.row];
     [cell.cellContentView addSubview:titleLabel];
     return cell;
@@ -78,7 +81,7 @@
     if (buttonIndex==1){
         [_rows removeObjectAtIndex:indexPath.row];
         [self.tableView beginUpdates];
-        [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationLeft];
+        [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
         [self.tableView endUpdates];
         [[NSNotificationCenter defaultCenter] postNotificationName:WKTableViewCellNotificationChangeToUnexpanded object:nil];
     }
