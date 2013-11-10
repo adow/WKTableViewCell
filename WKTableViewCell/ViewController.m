@@ -63,7 +63,7 @@
         cell=[[[WKTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault
                                     reuseIdentifier:identity
                                         inTableView:tableView
-                               withLeftButtonTitles:@[@"More",@"Delete"]] autorelease];
+                               withRightButtonTitles:@[@"More",@"Delete"]] autorelease];
         cell.delegate=self;
     }
     UILabel* titleLabel=[[[UILabel alloc]initWithFrame:CGRectMake(0, 0, 320, tableView.rowHeight)] autorelease];

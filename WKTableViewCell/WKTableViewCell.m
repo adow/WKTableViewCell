@@ -24,14 +24,14 @@
     }
     return self;
 }
--(id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier inTableView:(UITableView *)tableView withLeftButtonTitles:(NSArray *)leftButtonTitles{
+-(id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier inTableView:(UITableView *)tableView withRightButtonTitles:(NSArray *)rightButtonTitles{
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         // Initialization code
         self.tableView=tableView;
         //self.backgroundColor=[UIColor lightGrayColor];
         _scrollView=[[UIScrollView alloc]initWithFrame:self.bounds];
-        _scrollView.contentSize=CGSizeMake(self.bounds.size.width+WKTableViewCellButtonWidth*(leftButtonTitles.count), self.bounds.size.height);
+        _scrollView.contentSize=CGSizeMake(self.bounds.size.width+WKTableViewCellButtonWidth*(rightButtonTitles.count), self.bounds.size.height);
         _scrollView.autoresizingMask=UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
         _scrollView.showsHorizontalScrollIndicator=NO;
         _scrollView.showsVerticalScrollIndicator=NO;
@@ -39,8 +39,8 @@
         _scrollView.backgroundColor=[UIColor clearColor];
         [self.contentView addSubview:_scrollView];
         
-        self.leftButtonTitles=leftButtonTitles;
-        CGFloat leftButtonViewWidth=WKTableViewCellButtonWidth*self.leftButtonTitles.count+1*(self.leftButtonTitles.count-1);
+        self.rightButtonTitles=rightButtonTitles;
+        CGFloat leftButtonViewWidth=WKTableViewCellButtonWidth*self.rightButtonTitles.count+1*(self.rightButtonTitles.count-1);
         _buttonsView=[[UIView alloc]initWithFrame:CGRectMake(self.bounds.size.width-leftButtonViewWidth, 0,
                                                              leftButtonViewWidth, self.bounds.size.height)];
         _buttonsView.autoresizingMask=UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
@@ -48,13 +48,13 @@
         
         CGFloat buttonWidth=WKTableViewCellButtonWidth;
         CGFloat buttonHeight=self.bounds.size.height;
-        for (int a=0; a<self.leftButtonTitles.count; a++) {
+        for (int a=0; a<self.rightButtonTitles.count; a++) {
             CGFloat left=a*(WKTableViewCellButtonWidth+1);
             UIButton* button=[[[UIButton alloc]initWithFrame:CGRectMake(left, 0, buttonWidth,buttonHeight)] autorelease];
             button.tag=a;
             button.autoresizingMask=UIViewAutoresizingFlexibleHeight;
             button.backgroundColor=[UIColor redColor];
-            [button setTitle:self.leftButtonTitles[a] forState:UIControlStateNormal];
+            [button setTitle:self.rightButtonTitles[a] forState:UIControlStateNormal];
             [button addTarget:self action:@selector(onButton:) forControlEvents:UIControlEventTouchUpInside];
             [_buttonsView addSubview:button];
         }
@@ -86,6 +86,7 @@
 }
 -(void)dealloc{
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [_rightButtonTitles release];
     [_buttonsView release];
     [_cellContentView release];
     [_scrollView release];

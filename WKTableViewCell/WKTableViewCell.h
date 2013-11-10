@@ -25,9 +25,9 @@ typedef enum WKTableViewCellState:NSUInteger{
 @property (nonatomic,retain) UIScrollView* scrollView;
 @property (nonatomic,retain) UIView* cellContentView;
 @property (nonatomic,assign) id<WKTableViewCellDelegate> delegate;
-@property (nonatomic,copy) NSArray* leftButtonTitles;///按钮的标题
+@property (nonatomic,copy) NSArray* rightButtonTitles;///按钮的标题
 - (id)initWithStyle:(UITableViewCellStyle)style
     reuseIdentifier:(NSString *)reuseIdentifier
         inTableView:(UITableView*)tableView
-withLeftButtonTitles:(NSArray*)leftButtonTitles;
+withRightButtonTitles:(NSArray*)rightButtonTitles;
 @end
