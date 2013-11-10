@@ -79,7 +79,7 @@
 -(void)prepareForReuse{
     [super prepareForReuse];
     [self.scrollView setContentOffset:CGPointZero];
-    self.state=WKTableViewCellStateUnexpanded;
+    //self.state=WKTableViewCellStateUnexpanded;
     for (UIView* subView in self.cellContentView.subviews) {
         [subView removeFromSuperview];
     }
@@ -105,27 +105,25 @@
     _state=state;
     if (state==WKTableViewCellStateExpended){
         [self.scrollView setContentOffset:CGPointMake(WKTableViewCellButtonWidth*2, 0.0f) animated:YES];
+        self.tableView.scrollEnabled=NO;
+        self.tableView.allowsSelection=NO;
+        for (UITableViewCell* view in self.tableView.visibleCells) {
+            if ([view isKindOfClass:[WKTableViewCell class]] && view !=self){
+                WKTableViewCell* cell=(WKTableViewCell*)view;
+                cell.scrollView.scrollEnabled=NO;
+            }
+        }
     }
     else if(state==WKTableViewCellStateUnexpanded){
         [self.scrollView setContentOffset:CGPointZero animated:YES];
+        self.tableView.scrollEnabled=YES;
+        self.tableView.allowsSelection=YES;
     }
 }
 -(WKTableViewCellState)state{
     return _state;
 }
 #pragma mark - Action
--(void)onTapGesture:(UITapGestureRecognizer*)recognizer{
-    if (self.state==WKTableViewCellStateUnexpanded){
-        if ([self.tableView.delegate respondsToSelector:@selector(tableView:didSelectRowAtIndexPath:)]){
-            NSIndexPath *cellIndexPath = [self.tableView indexPathForCell:self];
-            [self.tableView.delegate tableView:self.tableView didSelectRowAtIndexPath:cellIndexPath];
-        }
-    }
-    else{
-        self.state=WKTableViewCellStateUnexpanded;
-        
-    }
-}
 -(IBAction)onButton:(id)sender{
     NSIndexPath* indexPath=[self.tableView indexPathForCell:self];
     if (sender==self.button_1){
@@ -141,6 +139,25 @@
         }
     }
 }
+#pragma mark Gesture
+-(void)onTapGesture:(UITapGestureRecognizer*)recognizer{
+    if (!self.tableView.allowsSelection){
+        for (UITableViewCell* view in self.tableView.visibleCells) {
+            if ([view isKindOfClass:[WKTableViewCell class]]){
+                WKTableViewCell* cell=(WKTableViewCell*)view;
+                cell.state=WKTableViewCellStateUnexpanded;
+                cell.scrollView.scrollEnabled=YES;
+            }
+        }
+    }
+    else{
+        if ([self.tableView.delegate respondsToSelector:@selector(tableView:didSelectRowAtIndexPath:)]){
+            NSIndexPath *cellIndexPath = [self.tableView indexPathForCell:self];
+            [self.tableView.delegate tableView:self.tableView didSelectRowAtIndexPath:cellIndexPath];
+        }
+    }
+}
+
 #pragma mark - UIScrollViewDelegate
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView{
     //NSLog(@"%@",NSStringFromCGPoint(scrollView.contentOffset));
