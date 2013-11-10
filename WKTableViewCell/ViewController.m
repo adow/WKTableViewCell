@@ -8,7 +8,8 @@
 
 #import "ViewController.h"
 #import "WKTableViewCell.h"
-@interface ViewController ()<UITableViewDataSource,UITableViewDelegate,WKTableViewCellDelegate>{
+#import "TestTableViewCell.h"
+@interface ViewController ()<UITableViewDataSource,UITableViewDelegate,WKTableViewCellDelegate,UIActionSheetDelegate>{
     NSMutableArray* _rows;
 }
 @property (nonatomic,retain) UITableView* tableView;
@@ -57,19 +58,25 @@
 }
 -(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     static NSString* identity=@"cell-identity";
-    WKTableViewCell* cell=(WKTableViewCell*)[tableView dequeueReusableCellWithIdentifier:identity];
+//    WKTableViewCell* cell=(WKTableViewCell*)[tableView dequeueReusableCellWithIdentifier:identity];
+//    if (!cell){
+//        cell=[[[WKTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault
+//                                    reuseIdentifier:identity
+//                                        inTableView:tableView
+//                               withRightButtonTitles:@[@"More",@"Delete"]] autorelease];
+//        cell.delegate=self;
+//    }
+//    UILabel* titleLabel=[[[UILabel alloc]initWithFrame:CGRectMake(0, 0, 320, tableView.rowHeight)] autorelease];
+//    titleLabel.autoresizingMask=UIViewAutoresizingFlexibleHeight;
+//    titleLabel.text=_rows[indexPath.row];
+//    [cell.cellContentView addSubview:titleLabel];
+//    return cell;
+    TestTableViewCell* cell=(TestTableViewCell*)[tableView dequeueReusableCellWithIdentifier:identity];
     if (!cell){
-        //cell=[[[WKTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identity] autorelease];
-        cell=[[[WKTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault
-                                    reuseIdentifier:identity
-                                        inTableView:tableView
-                               withRightButtonTitles:@[@"More",@"Delete"]] autorelease];
+        cell=[[[TestTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identity inTableView:tableView withRightButtonTitles:@[@"More",@"Delete"]] autorelease];
         cell.delegate=self;
     }
-    UILabel* titleLabel=[[[UILabel alloc]initWithFrame:CGRectMake(0, 0, 320, tableView.rowHeight)] autorelease];
-    titleLabel.autoresizingMask=UIViewAutoresizingFlexibleHeight;
-    titleLabel.text=_rows[indexPath.row];
-    [cell.cellContentView addSubview:titleLabel];
+    cell.contentLabel.text=_rows[indexPath.row];
     return cell;
 }
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -85,5 +92,13 @@
         [self.tableView endUpdates];
         [[NSNotificationCenter defaultCenter] postNotificationName:WKTableViewCellNotificationChangeToUnexpanded object:nil];
     }
+    else if (buttonIndex==0){
+        UIActionSheet* actionSheet=[[[UIActionSheet alloc]initWithTitle:@"Action" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"View" otherButtonTitles:@"Edit", nil] autorelease];
+        [actionSheet showInView:self.view];
+    }
+}
+#pragma mark - UIActionSheetDelegate
+-(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex{
+    [[NSNotificationCenter defaultCenter] postNotificationName:WKTableViewCellNotificationChangeToUnexpanded object:nil];
 }
 @end

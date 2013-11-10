@@ -95,10 +95,11 @@
 -(void)prepareForReuse{
     [super prepareForReuse];
     [self.scrollView setContentOffset:CGPointZero];
-    //self.state=WKTableViewCellStateUnexpanded;
-    for (UIView* subView in self.cellContentView.subviews) {
-        [subView removeFromSuperview];
-    }
+    //self.state=WKTableViewCellStateUnexpanded;///不需要设置为这个状态
+    ///在reuse的状态下不应该清楚subView
+//    for (UIView* subView in self.cellContentView.subviews) {
+//        [subView removeFromSuperview];
+//    }
 }
 #pragma mark - Properties
 -(void)setState:(WKTableViewCellState)state{

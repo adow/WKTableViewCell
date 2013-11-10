@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		68C35C81182FD3C800E29716 /* TestTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 68C35C80182FD3C800E29716 /* TestTableViewCell.m */; };
 		68D147BE1827E8FA00A218D1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 68D147BD1827E8FA00A218D1 /* Foundation.framework */; };
 		68D147C01827E8FA00A218D1 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 68D147BF1827E8FA00A218D1 /* CoreGraphics.framework */; };
 		68D147C21827E8FA00A218D1 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 68D147C11827E8FA00A218D1 /* UIKit.framework */; };
@@ -35,6 +36,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		68C35C7F182FD3C800E29716 /* TestTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestTableViewCell.h; sourceTree = "<group>"; };
+		68C35C80182FD3C800E29716 /* TestTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestTableViewCell.m; sourceTree = "<group>"; };
 		68D147BA1827E8FA00A218D1 /* WKTableViewCell.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WKTableViewCell.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		68D147BD1827E8FA00A218D1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		68D147BF1827E8FA00A218D1 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -124,6 +127,8 @@
 				68D147C41827E8FA00A218D1 /* Supporting Files */,
 				68D147F21827E91800A218D1 /* WKTableViewCell.h */,
 				68D147F31827E91800A218D1 /* WKTableViewCell.m */,
+				68C35C7F182FD3C800E29716 /* TestTableViewCell.h */,
+				68C35C80182FD3C800E29716 /* TestTableViewCell.m */,
 			);
 			path = WKTableViewCell;
 			sourceTree = "<group>";
@@ -255,6 +260,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				68D147D41827E8FA00A218D1 /* ViewController.m in Sources */,
+				68C35C81182FD3C800E29716 /* TestTableViewCell.m in Sources */,
 				68D147F41827E91800A218D1 /* WKTableViewCell.m in Sources */,
 				68D147CE1827E8FA00A218D1 /* AppDelegate.m in Sources */,
 				68D147CA1827E8FA00A218D1 /* main.m in Sources */,
@@ -468,6 +474,7 @@
 				68D147EE1827E8FA00A218D1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		68D147EF1827E8FA00A218D1 /* Build configuration list for PBXNativeTarget "WKTableViewCellTests" */ = {
 			isa = XCConfigurationList;
@@ -476,6 +483,7 @@
 				68D147F11827E8FA00A218D1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
