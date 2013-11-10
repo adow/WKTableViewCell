@@ -14,6 +14,7 @@
 
 @implementation WKTableViewCell
 #define  WKTableViewCellButtonWidth 60.0f
+static WKTableViewCell *_edingCell;///正在编辑中的cell
 @dynamic state;
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -107,6 +108,7 @@
         [self.scrollView setContentOffset:CGPointMake(WKTableViewCellButtonWidth*2, 0.0f) animated:YES];
         self.tableView.scrollEnabled=NO;
         self.tableView.allowsSelection=NO;
+        _edingCell=self;
         for (UITableViewCell* view in self.tableView.visibleCells) {
             if ([view isKindOfClass:[WKTableViewCell class]] && view !=self){
                 WKTableViewCell* cell=(WKTableViewCell*)view;
@@ -115,6 +117,8 @@
         }
     }
     else if(state==WKTableViewCellStateUnexpanded){
+        _edingCell=nil;
+        self.scrollView.scrollEnabled=YES;
         [self.scrollView setContentOffset:CGPointZero animated:YES];
         self.tableView.scrollEnabled=YES;
         self.tableView.allowsSelection=YES;
@@ -142,11 +146,18 @@
 #pragma mark Gesture
 -(void)onTapGesture:(UITapGestureRecognizer*)recognizer{
     if (!self.tableView.allowsSelection){
+        ///为了不让快速按下时鼓动状态固定在一半，一开始就先停止触摸
+        self.tableView.userInteractionEnabled=NO;
+        double delayInSeconds = 0.5;
+        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+            self.tableView.userInteractionEnabled=YES;
+        });
+        ///
         for (UITableViewCell* view in self.tableView.visibleCells) {
             if ([view isKindOfClass:[WKTableViewCell class]]){
                 WKTableViewCell* cell=(WKTableViewCell*)view;
                 cell.state=WKTableViewCellStateUnexpanded;
-                cell.scrollView.scrollEnabled=YES;
             }
         }
     }

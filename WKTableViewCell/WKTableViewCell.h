@@ -11,6 +11,10 @@ typedef enum WKTableViewCellState:NSUInteger{
     WKTableViewCellStateUnexpanded=0,
     WKTableViewCellStateExpended=1,
 } WKTableViewCellState;
+typedef enum WKTableViewCellEditing:NSUInteger{
+    WKTableViewCellEditingNormal=0,
+    WKTableViewCellEditingEditing=1,
+} WKTableViewCellEditing;
 @class WKTableViewCell;
 @protocol WKTableViewCellDelegate <NSObject>
 -(void)button_1_touched_on_cell:(WKTableViewCell*)cell atIndexPath:(NSIndexPath*)indexPath;
