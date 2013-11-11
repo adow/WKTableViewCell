@@ -110,10 +110,6 @@ withRightButtonTitles:(NSArray *)rightButtonTitles{
     [super prepareForReuse];
     [self.scrollView setContentOffset:CGPointZero];
     //self.state=WKTableViewCellStateUnexpanded;///不需要设置为这个状态
-    ///在reuse的状态下不应该清楚subView
-//    for (UIView* subView in self.cellContentView.subviews) {
-//        [subView removeFromSuperview];
-//    }
 }
 #pragma mark - Properties
 -(void)setState:(WKTableViewCellState)state{
@@ -140,7 +136,7 @@ withRightButtonTitles:(NSArray *)rightButtonTitles{
         }
         ///为了不让快速按下时鼓动状态固定在一半，一开始就先停止触摸
         self.tableView.userInteractionEnabled=NO;
-        double delayInSeconds = 0.5;
+        double delayInSeconds = 0.3;
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
             self.tableView.userInteractionEnabled=YES;

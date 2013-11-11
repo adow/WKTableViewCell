@@ -29,6 +29,7 @@
     }
     if (!_tableView){
         _tableView=[[UITableView alloc]initWithFrame:self.view.bounds];
+        _tableView.autoresizingMask=UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
         _tableView.dataSource=self;
         _tableView.delegate=self;
         [self.view addSubview:_tableView];
@@ -82,11 +83,11 @@
     return cell;
 }
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    NSLog(@"select row at indexPath:%d",indexPath.row);
+    NSLog(@"select row at indexPath:%ld",(long)indexPath.row);
 }
 #pragma mark - WKTableViewCellDelegate
 -(void)buttonTouchedOnCell:(WKTableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath atButtonIndex:(NSInteger)buttonIndex{
-    NSLog(@"row:%d,buttonIndex:%d",indexPath.row,buttonIndex);
+    NSLog(@"row:%ld,buttonIndex:%d",(long)indexPath.row,buttonIndex);
     if (buttonIndex==1){
         [_rows removeObjectAtIndex:indexPath.row];
         [self.tableView beginUpdates];
