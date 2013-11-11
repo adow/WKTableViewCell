@@ -13,14 +13,13 @@
 #define WKTableViewCellNotificationUnenableScroll @"WKTableViewCellNotificationUnenableScroll"
 #define WKTableViewCellRed [UIColor colorWithRed:1.0f green:0.231f blue:0.188f alpha:1.0f]
 @interface WKTableViewCell()<UIScrollViewDelegate>{
-    
+    UIPanGestureRecognizer* _panGesture;
 }
 @end
 
 @implementation WKTableViewCell
 ///正在修改的cell
 static WKTableViewCell *_editingCell;
-static UIPanGestureRecognizer* _panGesture;
 @dynamic state;
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -121,7 +120,7 @@ withRightButtonTitles:(NSArray *)rightButtonTitles{
         _editingCell=self;
         ///通知所有的cell停止滚动(除自己这个)
         [[NSNotificationCenter defaultCenter] postNotificationName:WKTableViewCellNotificationUnenableScroll object:nil];
-        ///
+        ///往tableView上添加一个手势处理,使得在tableView上的拖动也只是影响当前这个cell的scrollView
         if (!_panGesture){
             _panGesture=[[[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(onPanGesture:)] autorelease];
             [self.tableView addGestureRecognizer:_panGesture];
@@ -204,12 +203,15 @@ withRightButtonTitles:(NSArray *)rightButtonTitles{
     }
 }
 #pragma mark - Notififcation
+///外部通知，把cell改为原来的状态
 -(void)notificationChangeToUnexpanded:(NSNotification*)notification{
     self.state=WKTableViewCellStateUnexpanded;
 }
+///内部通知所有的cell可以滚动scrollView了
 -(void)notificationEnableScroll:(NSNotification*)notification{
     self.scrollView.scrollEnabled=YES;
 }
+///内部通知所有的cell不可以滚动scrollView(除当前编辑的这个外)
 -(void)notificationUnenableScroll:(NSNotification*)notification{
     if (_editingCell!=self)
         self.scrollView.scrollEnabled=NO;

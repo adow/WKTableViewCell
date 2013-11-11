@@ -77,7 +77,7 @@
 }
 #pragma mark - WKTableViewCellDelegate
 -(void)buttonTouchedOnCell:(WKTableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath atButtonIndex:(NSInteger)buttonIndex{
-    NSLog(@"row:%ld,buttonIndex:%d",(long)indexPath.row,buttonIndex);
+    NSLog(@"row:%ld,buttonIndex:%ld",(long)indexPath.row,(long)buttonIndex);
     if (buttonIndex==1){
         [_rows removeObjectAtIndex:indexPath.row];
         [self.tableView beginUpdates];
