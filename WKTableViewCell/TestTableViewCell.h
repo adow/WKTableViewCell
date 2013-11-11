@@ -12,4 +12,5 @@
     
 }
 @property (nonatomic,retain) UILabel* contentLabel;
+
 @end

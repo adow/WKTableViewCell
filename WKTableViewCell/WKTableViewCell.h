@@ -28,6 +28,7 @@ typedef enum WKTableViewCellState:NSUInteger{
 @property (nonatomic,copy) NSArray* rightButtonTitles;///按钮的标题
 - (id)initWithStyle:(UITableViewCellStyle)style
     reuseIdentifier:(NSString *)reuseIdentifier
+           delegate:(id<WKTableViewCellDelegate>)delegate 
         inTableView:(UITableView*)tableView
 withRightButtonTitles:(NSArray*)rightButtonTitles;
 @end

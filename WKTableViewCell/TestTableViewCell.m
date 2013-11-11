@@ -9,8 +9,12 @@
 #import "TestTableViewCell.h"
 
 @implementation TestTableViewCell
--(id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier inTableView:(UITableView *)tableView withRightButtonTitles:(NSArray *)rightButtonTitles{
-    self=[super initWithStyle:style reuseIdentifier:reuseIdentifier inTableView:tableView withRightButtonTitles:rightButtonTitles];
+-(id)initWithStyle:(UITableViewCellStyle)style
+   reuseIdentifier:(NSString *)reuseIdentifier
+          delegate:(id<WKTableViewCellDelegate>)delegate
+       inTableView:(UITableView *)tableView
+withRightButtonTitles:(NSArray *)rightButtonTitles{
+    self=[super initWithStyle:style reuseIdentifier:reuseIdentifier delegate:delegate inTableView:tableView withRightButtonTitles:rightButtonTitles];
     if (self){
         _contentLabel=[[UILabel alloc]initWithFrame:self.bounds];
         _contentLabel.autoresizingMask=UIViewAutoresizingFlexibleHeight;

@@ -73,8 +73,10 @@
 //    return cell;
     TestTableViewCell* cell=(TestTableViewCell*)[tableView dequeueReusableCellWithIdentifier:identity];
     if (!cell){
-        cell=[[[TestTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identity inTableView:tableView withRightButtonTitles:@[@"More",@"Delete"]] autorelease];
-        cell.delegate=self;
+        cell=[[[TestTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault
+                                      reuseIdentifier:identity
+                                             delegate:self
+                                          inTableView:tableView withRightButtonTitles:@[@"More",@"Delete"]] autorelease];
     }
     cell.contentLabel.text=_rows[indexPath.row];
     return cell;

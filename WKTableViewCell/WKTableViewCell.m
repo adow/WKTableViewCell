@@ -7,13 +7,20 @@
 //
 
 #import "WKTableViewCell.h"
+
+#define WKTableViewCellButtonWidth 60.0f
+#define WKTableViewCellNotificationEnableScroll @"WKTableViewCellNotificationEnableScroll"
+#define WKTableViewCellNotificationUnenableScroll @"WKTableViewCellNotificationUnenableScroll"
+
 @interface WKTableViewCell()<UIScrollViewDelegate>{
     
 }
 @end
 
 @implementation WKTableViewCell
-#define  WKTableViewCellButtonWidth 60.0f
+///正在修改的cell
+static WKTableViewCell *_editingCell;
+static UIPanGestureRecognizer* _panGesture;
 @dynamic state;
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -24,11 +31,15 @@
     }
     return self;
 }
--(id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier inTableView:(UITableView *)tableView withRightButtonTitles:(NSArray *)rightButtonTitles{
+-(id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+          delegate:(id<WKTableViewCellDelegate>)delegate
+       inTableView:(UITableView *)tableView
+withRightButtonTitles:(NSArray *)rightButtonTitles{
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         // Initialization code
         self.tableView=tableView;
+        self.delegate=delegate;
         //self.backgroundColor=[UIColor lightGrayColor];
         _scrollView=[[UIScrollView alloc]initWithFrame:self.bounds];
         _scrollView.contentSize=CGSizeMake(self.bounds.size.width+WKTableViewCellButtonWidth*(rightButtonTitles.count), self.bounds.size.height);
@@ -75,6 +86,8 @@
         [self.cellContentView addGestureRecognizer:tapGesture];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notificationChangeToUnexpanded:) name:WKTableViewCellNotificationChangeToUnexpanded object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notificationUnenableScroll:) name:WKTableViewCellNotificationUnenableScroll object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notificationEnableScroll:) name:WKTableViewCellNotificationEnableScroll object:nil];
     }
     return self;
 }
@@ -86,6 +99,7 @@
 }
 -(void)dealloc{
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [_panGesture release];
     [_rightButtonTitles release];
     [_buttonsView release];
     [_cellContentView release];
@@ -108,18 +122,38 @@
         [self.scrollView setContentOffset:CGPointMake(self.buttonsView.frame.size.width, 0.0f) animated:YES];
         self.tableView.scrollEnabled=NO;
         self.tableView.allowsSelection=NO;
-        for (UITableViewCell* view in self.tableView.visibleCells) {
-            if ([view isKindOfClass:[WKTableViewCell class]] && view !=self){
-                WKTableViewCell* cell=(WKTableViewCell*)view;
-                cell.scrollView.scrollEnabled=NO;
-            }
+        _editingCell=self;
+        ///通知所有的cell停止滚动(除自己这个)
+        [[NSNotificationCenter defaultCenter] postNotificationName:WKTableViewCellNotificationUnenableScroll object:nil];
+        ///
+        if (!_panGesture){
+            _panGesture=[[[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(onPanGesture:)] autorelease];
+            [self.tableView addGestureRecognizer:_panGesture];
         }
     }
     else if(state==WKTableViewCellStateUnexpanded){
-        self.scrollView.scrollEnabled=YES;
+        ///停止tableView的手势
+        if (_panGesture){
+            [self.tableView removeGestureRecognizer:_panGesture];
+            //[_panGesture release];
+            _panGesture=nil;
+        }
+        ///为了不让快速按下时鼓动状态固定在一半，一开始就先停止触摸
+        self.tableView.userInteractionEnabled=NO;
+        double delayInSeconds = 0.5;
+        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+            self.tableView.userInteractionEnabled=YES;
+        });
+        ///
         [self.scrollView setContentOffset:CGPointZero animated:YES];
+        ///tableView可以滚动了
+        _editingCell=nil;
         self.tableView.scrollEnabled=YES;
         self.tableView.allowsSelection=YES;
+        ///通知所有的cell可以滚动
+        [[NSNotificationCenter defaultCenter] postNotificationName:WKTableViewCellNotificationEnableScroll object:nil];
+        
     }
 }
 -(WKTableViewCellState)state{
@@ -133,23 +167,10 @@
         [self.delegate buttonTouchedOnCell:self atIndexPath:indexPath atButtonIndex:button.tag];
     }
 }
-#pragma mark Gesture
+#pragma mark - Gesture
 -(void)onTapGesture:(UITapGestureRecognizer*)recognizer{
-    if (!self.tableView.allowsSelection){
-        ///为了不让快速按下时鼓动状态固定在一半，一开始就先停止触摸
-        self.tableView.userInteractionEnabled=NO;
-        double delayInSeconds = 0.5;
-        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
-        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-            self.tableView.userInteractionEnabled=YES;
-        });
-        ///
-        for (UITableViewCell* view in self.tableView.visibleCells) {
-            if ([view isKindOfClass:[WKTableViewCell class]]){
-                WKTableViewCell* cell=(WKTableViewCell*)view;
-                cell.state=WKTableViewCellStateUnexpanded;
-            }
-        }
+    if (_editingCell){
+        _editingCell.state=WKTableViewCellStateUnexpanded;
     }
     else{
         if ([self.tableView.delegate respondsToSelector:@selector(tableView:didSelectRowAtIndexPath:)]){
@@ -158,7 +179,21 @@
         }
     }
 }
-
+-(void)onPanGesture:(UIPanGestureRecognizer*)recognizer{
+    if (!_editingCell)
+        return;
+    if (recognizer.state==UIGestureRecognizerStateChanged){
+        CGFloat translate_x=[recognizer translationInView:_editingCell.tableView].x;
+        CGFloat offset_x=self.buttonsView.frame.size.width;
+        CGFloat move_offset_x=offset_x-translate_x;
+        [_editingCell.scrollView setContentOffset:CGPointMake(move_offset_x, 0)];
+    }
+    else if (recognizer.state==UIGestureRecognizerStateEnded||
+             recognizer.state==UIGestureRecognizerStateCancelled ||
+             recognizer.state==UIGestureRecognizerStateFailed){
+        _editingCell.state=WKTableViewCellStateUnexpanded;
+    }
+}
 #pragma mark - UIScrollViewDelegate
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView{
     //NSLog(@"%@",NSStringFromCGPoint(scrollView.contentOffset));
@@ -175,5 +210,12 @@
 #pragma mark - Notififcation
 -(void)notificationChangeToUnexpanded:(NSNotification*)notification{
     self.state=WKTableViewCellStateUnexpanded;
+}
+-(void)notificationEnableScroll:(NSNotification*)notification{
+    self.scrollView.scrollEnabled=YES;
+}
+-(void)notificationUnenableScroll:(NSNotification*)notification{
+    if (_editingCell!=self)
+        self.scrollView.scrollEnabled=NO;
 }
 @end
