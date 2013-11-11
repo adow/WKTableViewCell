@@ -11,7 +11,7 @@
 #define WKTableViewCellButtonWidth 60.0f
 #define WKTableViewCellNotificationEnableScroll @"WKTableViewCellNotificationEnableScroll"
 #define WKTableViewCellNotificationUnenableScroll @"WKTableViewCellNotificationUnenableScroll"
-
+#define WKTableViewCellRed [UIColor colorWithRed:1.0f green:0.231f blue:0.188f alpha:1.0f]
 @interface WKTableViewCell()<UIScrollViewDelegate>{
     
 }
@@ -40,7 +40,6 @@ withRightButtonTitles:(NSArray *)rightButtonTitles{
         // Initialization code
         self.tableView=tableView;
         self.delegate=delegate;
-        //self.backgroundColor=[UIColor lightGrayColor];
         _scrollView=[[UIScrollView alloc]initWithFrame:self.bounds];
         _scrollView.contentSize=CGSizeMake(self.bounds.size.width+WKTableViewCellButtonWidth*(rightButtonTitles.count), self.bounds.size.height);
         _scrollView.autoresizingMask=UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
@@ -48,13 +47,14 @@ withRightButtonTitles:(NSArray *)rightButtonTitles{
         _scrollView.showsVerticalScrollIndicator=NO;
         _scrollView.delegate=self;
         _scrollView.backgroundColor=[UIColor clearColor];
+        //_scrollView.backgroundColor=[UIColor grayColor];
         [self.contentView addSubview:_scrollView];
         
         self.rightButtonTitles=rightButtonTitles;
         CGFloat leftButtonViewWidth=WKTableViewCellButtonWidth*self.rightButtonTitles.count+1*(self.rightButtonTitles.count-1);
         _buttonsView=[[UIView alloc]initWithFrame:CGRectMake(self.bounds.size.width-leftButtonViewWidth, 0,
                                                              leftButtonViewWidth, self.bounds.size.height)];
-        _buttonsView.autoresizingMask=UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+        _buttonsView.autoresizingMask=UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleHeight;
         [self.scrollView addSubview:_buttonsView];
         
         CGFloat buttonWidth=WKTableViewCellButtonWidth;
@@ -64,7 +64,7 @@ withRightButtonTitles:(NSArray *)rightButtonTitles{
             UIButton* button=[[[UIButton alloc]initWithFrame:CGRectMake(left, 0, buttonWidth,buttonHeight)] autorelease];
             button.tag=a;
             button.autoresizingMask=UIViewAutoresizingFlexibleHeight;
-            button.backgroundColor=[UIColor redColor];
+            button.backgroundColor=WKTableViewCellRed;
             [button setTitle:self.rightButtonTitles[a] forState:UIControlStateNormal];
             [button addTarget:self action:@selector(onButton:) forControlEvents:UIControlEventTouchUpInside];
             [_buttonsView addSubview:button];

@@ -50,6 +50,9 @@
     [_tableView release];
     [super dealloc];
 }
+-(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation{
+    [self.tableView reloadData];
+}
 #pragma mark - UITableDataSource and UITableViewDelegate
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     return 60.0f;
@@ -59,19 +62,6 @@
 }
 -(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     static NSString* identity=@"cell-identity";
-//    WKTableViewCell* cell=(WKTableViewCell*)[tableView dequeueReusableCellWithIdentifier:identity];
-//    if (!cell){
-//        cell=[[[WKTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault
-//                                    reuseIdentifier:identity
-//                                        inTableView:tableView
-//                               withRightButtonTitles:@[@"More",@"Delete"]] autorelease];
-//        cell.delegate=self;
-//    }
-//    UILabel* titleLabel=[[[UILabel alloc]initWithFrame:CGRectMake(0, 0, 320, tableView.rowHeight)] autorelease];
-//    titleLabel.autoresizingMask=UIViewAutoresizingFlexibleHeight;
-//    titleLabel.text=_rows[indexPath.row];
-//    [cell.cellContentView addSubview:titleLabel];
-//    return cell;
     TestTableViewCell* cell=(TestTableViewCell*)[tableView dequeueReusableCellWithIdentifier:identity];
     if (!cell){
         cell=[[[TestTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault
