@@ -113,7 +113,7 @@ withRightButtonTitles:(NSArray *)rightButtonTitles{
 #pragma mark - Properties
 -(void)setState:(WKTableViewCellState)state{
     _state=state;
-    if (state==WKTableViewCellStateExpended){
+    if (state==WKTableViewCellStateExpanded){
         [self.scrollView setContentOffset:CGPointMake(self.buttonsView.frame.size.width, 0.0f) animated:YES];
         self.tableView.scrollEnabled=NO;
         self.tableView.allowsSelection=NO;
@@ -196,7 +196,7 @@ withRightButtonTitles:(NSArray *)rightButtonTitles{
 }
 -(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
     if (scrollView.contentOffset.x>=self.buttonsView.frame.size.width/2){
-        self.state=WKTableViewCellStateExpended;
+        self.state=WKTableViewCellStateExpanded;
     }
     else{
         self.state=WKTableViewCellStateUnexpanded;
